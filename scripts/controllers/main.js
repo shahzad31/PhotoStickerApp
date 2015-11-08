@@ -52,11 +52,11 @@ angular.module('photoStickerApp')
     }
 
     // This collection will be used to render sticker directives, preload some stickers from images folder
-    var stickers = [{title:'yeoman',dataURL:'../images/stickers/yeoman.png'}];
+    var stickers = [{title:'yeoman',dataURL:'images/stickers/yeoman.png'}];
 
     //abandon above array approach because i need dataURL in svg to export image, loading direct url was causing problem
-    getImageFromFiles('../images/stickers/well-done.png','well done');
-    getImageFromFiles('../images/stickers/yeoman.png','yeoman');
+    getImageFromFiles('images/stickers/well-done.png','well done');
+    getImageFromFiles('images/stickers/yeoman.png','yeoman');
     //this function code i got  from stackoverflow , did modification according to my needs
     function getImageFromFiles(url,title) {
       var img=new Image();
