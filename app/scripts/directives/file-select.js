@@ -1,7 +1,7 @@
 /**
  * Created by mshahzad on 06/11/2015.
  */
-angular.module('photoStickerApp.ngFileSelect', [])
+angular.module('photoStickerApp')
   .directive('ngFileSelect', function() {
     return {
       link: function($scope,el){
