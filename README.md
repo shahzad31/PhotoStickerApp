@@ -2,6 +2,7 @@
 This application is helps in placing stickers on top of images using svg.
 
 Following libraries are used in this project
+
 1. Jquery
 2. Angular JS
 3. svgjs(svgjs.com)
