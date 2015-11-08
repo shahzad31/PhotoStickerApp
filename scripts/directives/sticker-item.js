@@ -1,25 +1,25 @@
 /**
  * Created by mshahzad on 06/11/2015.
  */
-angular.module('photoStickerApp.stickerItem', [])
+angular.module('photoStickerApp')
   .directive('stickerItem', function($document) {
     return {
       templateUrl: 'views/directives/sticker-item.html',
       restrict: 'E',
       scope: false,
       link: function(scope, element, attr) {
-        var startX = 0, startY = 0, x = 0, y = 0;
-        element.draggable({
-          revert: true,
-          refreshPositions: true,
-          revertDuration:0,
-          drag: function (event, ui) {
-            ui.helper.addClass("draggable");
-          },
-          stop: function (event, ui) {
-            // ui.helper.removeClass("draggable");
-          }
-        });
+        scope.removeSticker=function(sticker){
+          //remove from it from template array
+          var index=scope.stickersCache.indexOf(sticker);
+          if(index>-1)
+          scope.stickersCache.splice(index, 1);
+
+          //remove it from local storage
+          var localCache=angular.fromJson(localStorage.stickersCache);
+          var ind=localCache.indexOf(sticker);
+          localCache.splice(ind,1);
+          localStorage.stickersCache=angular.toJson(localCache);
+        }
       }
     };
   });

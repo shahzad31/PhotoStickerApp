@@ -7,18 +7,24 @@
  * # MainCtrl
  * Controller of the photoStickerApp
  */
-angular.module('photoStickerApp.main', ['photoStickerApp.draggableImg','photoStickerApp.imageSvg','ui.bootstrap','photoStickerApp.ngFileSelect','photoStickerApp.stickerItem'])
-  .config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/', {
-      templateUrl: 'views/main.html',
-      controller: 'MainCtrl'
-    });
-  }])
+angular.module('photoStickerApp')
   .controller('MainCtrl', function ($scope,$uibModal, $log) {
+
+    //make navbar class active over home
+    $scope.setNavBarIcon=function(){
+      alert();
+    };
+
+    //check if browser support file reader
     if (window.File && window.FileReader && window.FileList && window.Blob) {
     } else {
       alert('The File APIs are not fully supported in this browser.');
     }
+
+    //at start Start Over button will be hidden
+    $scope.showStartOver=false;
+
+    //calculate local storage size in kb
     var localStorageSpace = function(){
       var allStrings = '';
       for(var key in window.localStorage){
@@ -26,42 +32,93 @@ angular.module('photoStickerApp.main', ['photoStickerApp.draggableImg','photoSti
           allStrings += window.localStorage[key];
         }
       }
-      return allStrings ? 3 + ((allStrings.length*16)/(8*1024*1024)) : 'Empty (0 KB)';
+      return allStrings ? 3 + ((allStrings.length*16)/(8*1024*1024)) : 0;
     };
-    if(Math.round(localStorageSpace)>4999){
+
+
+    //show warning because most browsers have limit on local storage upto 5MB
+    if(Math.round(localStorageSpace())>4999){
       alert('Local Storage is exceeding 5MB limit');
     }
-    $scope.stickersCache = []; // This collection will be used to render sticker directives
+
+    $scope.stickersCache =[];
+    //Get stickers from local storage and publish them to sticker-item directive
     if(typeof(Storage) !== "undefined") {
       if(localStorage.stickersCache){
         $scope.stickersCache=JSON.parse(localStorage.getItem("stickersCache"));
-      }
-      if(localStorage.svgImage){
-        $scope.svgImage=localStorage.getItem("svgImage");
+      }else{
+        $scope.stickersCache=[];
       }
     }
+
+    // This collection will be used to render sticker directives, preload some stickers from images folder
+    var stickers = [{title:'yeoman',dataURL:'../images/stickers/yeoman.png'}];
+
+    //abandon above array approach because i need dataURL in svg to export image, loading direct url was causing problem
+    getImageFromFiles('../images/stickers/well-done.png','well done');
+    getImageFromFiles('../images/stickers/yeoman.png','yeoman');
+    //this function code i got  from stackoverflow , did modification according to my needs
+    function getImageFromFiles(url,title) {
+      var img=new Image();
+      img.src=url;
+      img.onload=function(){
+        // Create an empty canvas element
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Copy the image contents to the canvas
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        // Get the data-URL formatted image
+        // Firefox supports PNG and JPEG. You could check img.src to
+        // guess the original format, but be aware the using "image/jpg"
+        // will re-encode the image.
+        var dataURL = canvas.toDataURL("image/png");
+
+        $scope.stickersCache.push({dataURL: dataURL,title:title});
+        if(!$scope.$$phase)
+          $scope.$apply();
+      };
+
+    }
+
+
+
+    //open form to fill new sticker attributes
     $scope.open = function () {
 
       var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: 'myModalContent.html',
-        controller: 'ModalInstanceCtrl',
+        templateUrl: '../views/directives/modal-view.html',
+        controller: 'modalCtrl',
         resolve: {
           file:$scope.file
         }
       });
+
+      //push newly added to local storage and sticker-item directive
       modalInstance.result.then(function (file) {
         $scope.file = file;
-        file.id=$scope.stickersCache.length+1;
+        file.id=$scope.stickersCache.length+1+file.title;
         $scope.stickersCache.push(file);
-        localStorage.setItem("stickersCache",JSON.stringify($scope.stickersCache));
+        if(localStorage.stickersCache)
+        var localStickers=angular.fromJson(localStorage.stickersCache);
+        else
+          localStickers=[];
+        localStickers.push(file);
+        localStorage.setItem("stickersCache",JSON.stringify(localStickers));
       }, function () {
       });
     };
+
+
+    //export as png image
     $scope.exportImage= function () {
       var svg = document.querySelector( "svg" );
-      svg.setAttribute('width',"650");
-      svg.setAttribute('height',"400");
+      svg.setAttribute('width',$(svg).width());
+      svg.setAttribute('height',$(svg).height());
       var svgData = new XMLSerializer().serializeToString( svg );
 
       var canvas = document.createElement( "canvas" );
@@ -87,33 +144,11 @@ angular.module('photoStickerApp.main', ['photoStickerApp.draggableImg','photoSti
 
         a.remove();
       };
-      localStorage.setItem("svgImage",svgData);
     };
-    $scope.startOver= function () {
-      localStorage.removeItem('svgImage');
-      var svg=SVG(document.querySelector("svg").id);
-      svg.clear();
-    }
-  });
-angular.module('photoStickerApp.main').controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
-  $scope.file={};
-  $scope.ok = function () {
-    if($scope.file.title && $scope.file.src)
-    $uibModalInstance.close($scope.file);
-  };
 
-  $scope.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
-  $scope.getFile=function(file){
-      if (file.type.match('image.*')) {
-        var reader = new FileReader();
-        reader.onload = (function (theFile) {
-          return function (e) {
-            $scope.file.dataURL=e.target.result;
-          };
-        })(file);
-        reader.readAsDataURL(file);
-      }
-  };
+  })
+  .controller('HeaderController',function($scope, $location) {
+    $scope.isActive = function (viewLocation) {
+      return viewLocation === $location.path();
+    };
 });
