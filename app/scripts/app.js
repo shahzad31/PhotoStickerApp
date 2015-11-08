@@ -8,22 +8,35 @@
  *
  * Main module of the application.
  */
-angular
-  .module('photoStickerApp', [
-    'ngAnimate',
-    'ngResource',
-    'ngRoute',
-    'photoStickerApp.main',
-    'photoStickerApp.draggableImg',
-    'photoStickerApp.about',
-    'photoStickerApp.imageSvg',
-    'photoStickerApp.ngFileSelect',
-    'photoStickerApp.stickerItem'
 
 
-  ])
+//some of the code help i got from following links
+//https://gist.github.com/gustavohenke/9073132*/
+//http://www.html5rocks.com/en/tutorials/file/dndfiles/
+
+angular.module('photoStickerApp', [
+  'ngAnimate',
+  'ngResource',
+  'ngRoute',
+  'ui.bootstrap'
+])
   .config(function ($routeProvider) {
-    $routeProvider.otherwise({
+    $routeProvider.when('/', {
+      templateUrl: 'views/main.html',
+      controller: 'MainCtrl'
+    })
+      .when('/home', {
+        templateUrl: 'views/main.html',
+        controller: 'MainCtrl'
+      }).
+      when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      }).
+      when('/contact', {
+        templateUrl: 'views/contact.html',
+        controller: 'ContactCtrl'
+      }).otherwise({
         redirectTo: '/'
       });
   });
