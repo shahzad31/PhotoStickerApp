@@ -8,6 +8,9 @@ Following libraries are used in this project
 3. svgjs(svgjs.com)
 4. bootstrap
 
+##Online Demo 
+
+Online demo of the app can be accessed here shahzad31.github.io/PhotoStickerApp
 
 ##Generator
 
