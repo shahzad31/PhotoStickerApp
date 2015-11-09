@@ -10,7 +10,7 @@ Following libraries are used in this project
 
 ##Online Demo 
 
-Online demo of the app can be accessed here shahzad31.github.io/PhotoStickerApp
+Online demo of the app can be accessed here https://shahzad31.github.io/PhotoStickerApp
 
 ##Generator
 
