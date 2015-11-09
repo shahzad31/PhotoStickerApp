@@ -124,15 +124,29 @@ angular.module('photoStickerApp')
           localStorage.removeItem('dataToPersist');
           imagesList=[];
           mainImage=null;
-          var svg=SVG(document.querySelector("svg").id);
-          svg.clear();
-          var text = svg.text('Drop photo here').move($(svg.node).width()/2, $(svg.node).height()/2);
+          draw.clear();
+          var text = draw.text('Drop photo here').move($(svg.node).width()/2, $(svg.node).height()/2);
           text.font({
             size: 20,
             anchor: 'middle',
             leading: 1
           });
           scope.clearSvg=true;
+        };
+
+        //export as svg
+        scope.exportSvg= function () {
+          var svg = document.querySelector( "svg" );
+          svg.setAttribute('width',$(svg).width());
+          svg.setAttribute('height',$(svg).height());
+          var svgData = new XMLSerializer().serializeToString( svg );
+          var a = $("<a>")
+            .attr("href", "data:image/svg+xml;base64," + btoa( svgData ))
+            .attr("download", "file.svg")
+            .appendTo("body");
+          a[0].click();
+
+          a.remove();
         };
 
         //save application state in local storage of browser
