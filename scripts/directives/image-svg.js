@@ -125,7 +125,7 @@ angular.module('photoStickerApp')
           imagesList=[];
           mainImage=null;
           draw.clear();
-          var text = draw.text('Drop photo here').move($(svg.node).width()/2, $(svg.node).height()/2);
+          var text = draw.text('Drop photo here').move($(draw.node).width()/2, $(draw.node).height()/2);
           text.font({
             size: 20,
             anchor: 'middle',
