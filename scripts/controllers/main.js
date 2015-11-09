@@ -91,7 +91,7 @@ angular.module('photoStickerApp')
 
       var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: '../views/directives/modal-view.html',
+        templateUrl: 'views/directives/modal-view.html',
         controller: 'modalCtrl',
         resolve: {
           file:$scope.file
