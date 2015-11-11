@@ -8,7 +8,7 @@ This application is helps in placing stickers on top of images using svg.
 4. Using local storage to retain state of application even if user refresh page or come back after some time after exiting
 5. exportable as png image or svg file
 
-#Following libraries are used in this project
+##Following libraries are used in this project
 
 1. Angular JS
 2. Jquery
