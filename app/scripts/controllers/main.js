@@ -52,11 +52,11 @@ angular.module('photoStickerApp')
     }
 
     // This collection will be used to render sticker directives, preload some stickers from images folder
-    var stickers = [{title:'yeoman',dataURL:'../images/stickers/yeoman.png'}];
+    var stickers = [{title:'yeoman',dataURL:'images/stickers/yeoman.png'}];
 
     //abandon above array approach because i need dataURL in svg to export image, loading direct url was causing problem
-    getImageFromFiles('../images/stickers/well-done.png','well done');
-    getImageFromFiles('../images/stickers/yeoman.png','yeoman');
+    getImageFromFiles('images/stickers/well-done.png','well done');
+    getImageFromFiles('images/stickers/yeoman.png','yeoman');
     //this function code i got  from stackoverflow , did modification according to my needs
     function getImageFromFiles(url,title) {
       var img=new Image();
@@ -91,7 +91,7 @@ angular.module('photoStickerApp')
 
       var modalInstance = $uibModal.open({
         animation: true,
-        templateUrl: '../views/directives/modal-view.html',
+        templateUrl: 'views/directives/modal-view.html',
         controller: 'modalCtrl',
         resolve: {
           file:$scope.file
@@ -111,39 +111,6 @@ angular.module('photoStickerApp')
         localStorage.setItem("stickersCache",JSON.stringify(localStickers));
       }, function () {
       });
-    };
-
-
-    //export as png image
-    $scope.exportImage= function () {
-      var svg = document.querySelector( "svg" );
-      svg.setAttribute('width',$(svg).width());
-      svg.setAttribute('height',$(svg).height());
-      var svgData = new XMLSerializer().serializeToString( svg );
-
-      var canvas = document.createElement( "canvas" );
-      var ctx = canvas.getContext( "2d" );
-      canvas.width=svg.width.animVal.value;
-      canvas.height=svg.height.animVal.value;
-
-      var img = document.createElement( "img" );
-      img.setAttribute( "src", "data:image/svg+xml;base64," + btoa( svgData ) );
-      img.width=canvas.width;
-      img.height=canvas.height;
-      img.onload = function() {
-        ctx.drawImage( img, 0, 0,img.width,img.height );
-
-        // Now is done
-        var dataURL= canvas.toDataURL( "image/png" );
-        var a = $("<a>")
-          .attr("href", dataURL)
-          .attr("download", "img.png")
-          .appendTo("body");
-
-        a[0].click();
-
-        a.remove();
-      };
     };
 
   })

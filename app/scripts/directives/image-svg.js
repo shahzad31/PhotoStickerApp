@@ -136,6 +136,10 @@ angular.module('photoStickerApp')
 
         //export as svg
         scope.exportSvg= function () {
+          imagesList.forEach(function (item, index) {
+            item.resize('stop');
+            item.select(false);
+          });
           var svg = document.querySelector( "svg" );
           svg.setAttribute('width',$(svg).width());
           svg.setAttribute('height',$(svg).height());
@@ -148,6 +152,43 @@ angular.module('photoStickerApp')
 
           a.remove();
         };
+
+        //export as png image
+        scope.exportImage= function () {
+          imagesList.forEach(function (item, index) {
+            item.resize('stop');
+            item.select(false);
+          });
+          var svg = document.querySelector( "svg" );
+          svg.setAttribute('width',$(svg).width());
+          svg.setAttribute('height',$(svg).height());
+          var svgData = new XMLSerializer().serializeToString( svg );
+
+          var canvas = document.createElement( "canvas" );
+          var ctx = canvas.getContext( "2d" );
+          canvas.width=svg.width.animVal.value;
+          canvas.height=svg.height.animVal.value;
+
+          var img = document.createElement( "img" );
+          img.setAttribute( "src", "data:image/svg+xml;base64," + btoa( svgData ) );
+          img.width=canvas.width;
+          img.height=canvas.height;
+          img.onload = function() {
+            ctx.drawImage( img, 0, 0,img.width,img.height );
+
+            // Now is done
+            var dataURL= canvas.toDataURL( "image/png" );
+            var a = $("<a>")
+              .attr("href", dataURL)
+              .attr("download", "img.png")
+              .appendTo("body");
+
+            a[0].click();
+
+            a.remove();
+          };
+        };
+
 
         //save application state in local storage of browser
         window.addEventListener('beforeunload', function() {
