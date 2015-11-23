@@ -16,7 +16,7 @@
   "devDependencies": {
   },
   "appPath": "app",
-  "moduleName": "photoStickerAppApp",
+  "moduleName": "photoStickerApp",
   "overrides": {
     "bootstrap": {
       "main": [

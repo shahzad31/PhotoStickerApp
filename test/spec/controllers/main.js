@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('photoStickerAppApp'));
+  beforeEach(module('photoStickerApp'));
 
   var MainCtrl,
     scope;
